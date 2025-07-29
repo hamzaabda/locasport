@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmation d'email</title>
+</head>
+<body>
+    <p>Bonjour <span th:text="${name}"></span>,</p>
+    
+    <p>Merci pour votre inscription. Veuillez cliquer sur le lien ci-dessous pour confirmer votre adresse email :</p>
+    
+    <a th:href="@{${confirmationLink}}">Confirmer mon email</a>
+    
+    <p>Ce lien expirera dans 15 minutes.</p>
+    
+    <p>Cordialement,<br>L'équipe de notre application</p>
+</body>
+</html>
