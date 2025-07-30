@@ -29,14 +29,17 @@ public class SecurityConfiguration {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/api/v1/auth/**",
+                    "/api/auth/**", // Ajout pour les endpoints de reset password
                     "/api/v1/terrains/**",
                     "/v3/api-docs/**",
                     "/swagger-ui/**",
                     "/swagger-ui.html",
-                    "/api/v1/auth/**", "/confirm/**"
-                    
+                    "/confirm/**",
+                    "/reset-password/**", // Nouveau endpoint
+                    "/forgot-password/**", // Nouveau endpoint
+                    "/validate-reset-token/**", // Nouveau endpoint
+                    "/api/terrains/**"
                 ).permitAll()
-                
                 .anyRequest().authenticated()
             )
             .sessionManagement(sess -> sess
