@@ -1,6 +1,5 @@
 package com.example.project.config;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +29,6 @@ public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
-   
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -49,7 +47,7 @@ public class SecurityConfiguration {
                     // Maintenance endpoints
                     "/api/maintenance/**",
                     "/api/maintenance/schedule",
-                    "/api/maintenance/*/status",  // Changé de /**/status à /*/status
+                    "/api/maintenance/*/status",
                     "/api/maintenance/terrain/**",
                     "/api/maintenance/history/**",
                     // Terrains endpoints
@@ -57,9 +55,14 @@ public class SecurityConfiguration {
                     "/api/terrains/**",
                     // Événements endpoints (lecture seule publique)
                     "/api/evenements",
-                    "/api/evenements/*",          // Changé de /{id} à /*
-                    "/api/equipes/evenement/*",   // Changé de /{evenementId} à /*
-                    "/api/tarifications/evenement/*" // Changé de /{evenementId} à /*
+                    "/api/evenements/*",
+                    "/api/equipes/evenement/*",
+                    "/api/tarifications/evenement/*",
+                    // Alertes endpoints (lecture seule publique)
+                    "/api/alertes",
+                    "/api/alertes/type/*",
+                    "/api/alertes/urgent",
+                    "/api/alertes/expired"
                 ).permitAll()
                 
                 // Endpoints protégés
@@ -67,9 +70,15 @@ public class SecurityConfiguration {
                     "/api/evenements/**",
                     "/api/equipes/**",
                     "/api/participants/**",
-                    "/api/tarifications/**"
+                    "/api/tarifications/**",
+                    // Gestion des alertes (écriture protégée)
+                    "/api/alertes/**"
                 ).authenticated()
+                
+                // Rôles spécifiques
                 .requestMatchers(HttpMethod.POST, "/api/equipes").hasAnyRole("ADMIN", "ORGANIZER")
+                .requestMatchers(HttpMethod.POST, "/api/alertes").hasAnyRole("ADMIN", "MANAGER")
+                .requestMatchers(HttpMethod.PUT, "/api/alertes/**").hasAnyRole("ADMIN", "MANAGER")
                 .anyRequest().authenticated()
             )
             .sessionManagement(sess -> sess
