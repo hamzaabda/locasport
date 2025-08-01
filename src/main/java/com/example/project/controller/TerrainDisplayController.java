@@ -11,6 +11,7 @@ import com.example.project.model.Terrain;
 import com.example.project.service.TerrainService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/display/terrains")
@@ -28,7 +29,7 @@ public class TerrainDisplayController {
     }
 
     @GetMapping("/{id}")
-    public Terrain afficherTerrainParId(@PathVariable Long id) {
+    public Optional<Terrain> afficherTerrainParId(@PathVariable Long id) {
         return terrainService.getTerrainById(id);
     }
 
