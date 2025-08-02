@@ -62,7 +62,9 @@ public class SecurityConfiguration {
                     "/api/alertes",
                     "/api/alertes/type/*",
                     "/api/alertes/urgent",
-                    "/api/alertes/expired"
+                    "/api/alertes/expired",
+                    "/api/feedback/target/**",
+                    "/api/feedback/stats/**"
                 ).permitAll()
                 
                 // Endpoints protégés
@@ -79,6 +81,19 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.POST, "/api/equipes").hasAnyRole("ADMIN", "ORGANIZER")
                 .requestMatchers(HttpMethod.POST, "/api/alertes").hasAnyRole("ADMIN", "MANAGER")
                 .requestMatchers(HttpMethod.PUT, "/api/alertes/**").hasAnyRole("ADMIN", "MANAGER")
+                // POST feedback nécessite une authentification
+                .requestMatchers(HttpMethod.POST, "/api/feedback").authenticated()
+                
+                // GET feedback peut être public
+                .requestMatchers(HttpMethod.GET, "/api/feedback").permitAll()
+                
+                // Modération réservée aux rôles spécifiques
+                .requestMatchers(HttpMethod.POST, "/api/feedback/moderate/**")
+                    .hasAnyRole("ADMIN", "MODERATOR")
+                
+                // Analyse réservée aux rôles spécifiques
+                .requestMatchers("/api/analysis/**")
+                    .hasAnyRole("ADMIN", "MANAGER")
                 .anyRequest().authenticated()
             )
             .sessionManagement(sess -> sess
